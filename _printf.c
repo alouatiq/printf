@@ -1,93 +1,51 @@
 #include "main.h"
-#include <stdarg.h>
-#include <unistd.h>
+
 /**
-* _printf - produces output according to a format
-* @format: format string containing the characters and the specifiers
-* Description: this function will call the corresponding function
-* that will handle the format
-* Return: length of the formatted output string
-*/
+ * _printf - formatted output conversion and print data.
+ * @format: input string.
+ *
+ * Return: number of chars printed.
+ */
 int _printf(const char *format, ...)
 {
-int count = 0;
-va_list args;
-int i = 0;
-va_start(args, format);
-if (!format)
-return (-1);
-while (format && format[i])
-{
-if (format[i] == '%')
-{
-i++;
-if (format[i] == 'c')
-count += _putchar(va_arg(args, int));
-else if (format[i] == 's')
-count += _puts(va_arg(args, char *));
-else if (format[i] == '%')
-count += _putchar('%');
-else if (format[i] == 'd' || format[i] == 'i')
-count += _print_number(va_arg(args, int));
-else
-return (-1);
-}
-else
-count += _putchar(format[i]);
-i++;
-}
-va_end(args);
-return (count);
-}
-/**
-* _putchar - writes the character c to stdout
-* @c: The character to print
-*
-* Return: On success 1.
-* On error, -1 is returned, and errno is set appropriately.
-*/
-int _putchar(char c)
-{
-return (write(1, &c, 1));
-}
-/**
-* _puts - prints a string to stdout
-* @str: the string to print
-*
-* Return: number of characters printed
-*/
-int _puts(char *str)
-{
-int i = 0;
-if (!str)
-str = "(null)";
-while (str[i])
-_putchar(str[i++]);
-return (i);
-}
-/**
-* _print_number - prints an integer to stdout
-* @n: the integer to print
-*
-* Return: number of characters printed
-*/
-int _print_number(int n)
-{
-unsigned int num;
-int count = 0;
-if (n < 0)
-{
-_putchar('-');
-count++;
-num = -n;
-}
-else
-{
-num = n;
-}
-if (num / 10)
-count += _print_number(num / 10);
-_putchar((num % 10) + '0');
-count++;
-return (count);
+	unsigned int i = 0, len = 0, ibuf = 0;
+	va_list arguments;
+	int (*function)(va_list, char *, unsigned int);
+	char *buffer;
+
+	va_start(arguments, format), buffer = malloc(sizeof(char) * 1024);
+	if (!format || !buffer || (format[i] == '%' && !format[i + 1]))
+		return (-1);
+	if (!format[i])
+		return (0);
+	for (i = 0; format && format[i]; i++)
+	{
+		if (format[i] == '%')
+		{
+			if (format[i + 1] == '\0')
+			{	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+				return (-1);
+			}
+			else
+			{	function = get_print_func(format, i + 1);
+				if (function == NULL)
+				{
+					if (format[i + 1] == ' ' && !format[i + 2])
+						return (-1);
+					handl_buf(buffer, format[i], ibuf), len++, i--;
+				}
+				else
+				{
+					len += function(arguments, buffer, ibuf);
+					i += ev_print_func(format, i + 1);
+				}
+			} i++;
+		}
+		else
+			handl_buf(buffer, format[i], ibuf), len++;
+		for (ibuf = len; ibuf > 1024; ibuf -= 1024)
+			;
+	}
+	print_buf(buffer, ibuf), free(buffer), va_end(arguments);
+	return (len);
 }
