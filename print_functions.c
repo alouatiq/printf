@@ -42,39 +42,29 @@ int _printstring(va_list args)
 int _printint(va_list args)
 {
     int n = va_arg(args, int);
-    int num, last = n % 10, digit, exp = 1;
-    int  i = 1;
+    unsigned int num, digit, exp = 1;
+    int count = 0;
 
-    n = n / 10;
-    num = n;
-
-    if (last < 0)
+    if (n < 0)
     {
         _putchar('-');
-        num = -num;
-        n = -n;
-        last = -last;
-        i++;
+        count++;
+        num = -n;
     }
-
-    if (num > 0)
-    {
-        while (num / 10 != 0)
-        {
-            exp = exp * 10;
-            num = num / 10;
-        }
+    else
         num = n;
-        while (exp > 0)
-        {
-            digit = num / exp;
-            _putchar(digit + '0');
-            num = num - (digit * exp);
-            exp = exp / 10;
-            i++;
-        }
-    }
-    _putchar(last + '0');
 
-    return (i);
+    while (num / exp > 9)
+        exp *= 10;
+
+    while (exp > 0)
+    {
+        digit = num / exp;
+        _putchar(digit + '0');
+        count++;
+        num %= exp;
+        exp /= 10;
+    }
+
+    return (count);
 }
