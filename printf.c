@@ -71,7 +71,6 @@ int _printf(const char *format, ...)
  * @value: Integer value
  * @str: Buffer to store the string
  * @base: Numerical base
- * 
  * Return: Pointer to the buffer
  */
 char *itoa(int value, char *str, int base)
