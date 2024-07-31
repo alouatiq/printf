@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdlib.h>
 
 /**
  * _printf - Custom implementation of printf
@@ -13,6 +14,8 @@ int _printf(const char *format, ...)
     const char *ptr;
     char *str;
     char c;
+    int d;
+    char buffer[20]; // Buffer for integer to string conversion
 
     va_start(args, format);
     for (ptr = format; *ptr != '\0'; ptr++)
@@ -36,6 +39,18 @@ int _printf(const char *format, ...)
                     count++;
                 }
             }
+            else if (*ptr == 'd' || *ptr == 'i')
+            {
+                d = va_arg(args, int);
+                itoa(d, buffer, 10);
+                str = buffer;
+                while (*str)
+                {
+                    write(1, str, 1);
+                    str++;
+                    count++;
+                }
+            }
             else if (*ptr == '%')
             {
                 write(1, "%", 1);
@@ -50,4 +65,35 @@ int _printf(const char *format, ...)
     }
     va_end(args);
     return count;
+}
+
+/**
+ * itoa - Convert integer to string
+ * @value: Integer value
+ * @str: Buffer to store the string
+ * @base: Numerical base
+ * 
+ * Return: Pointer to the buffer
+ */
+char *itoa(int value, char *str, int base)
+{
+    char *ptr = str, *ptr1 = str, tmp_char;
+    int tmp_value;
+
+    if (base < 2 || base > 36) { *str = '\0'; return str; }
+
+    do {
+        tmp_value = value;
+        value /= base;
+        *ptr++ = "0123456789abcdefghijklmnopqrstuvwxyz"[tmp_value - value * base];
+    } while ( value );
+
+    if (tmp_value < 0) *ptr++ = '-';
+    *ptr-- = '\0';
+    while (ptr1 < ptr) {
+        tmp_char = *ptr;
+        *ptr-- = *ptr1;
+        *ptr1++ = tmp_char;
+    }
+    return str;
 }
