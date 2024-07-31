@@ -25,24 +25,30 @@ int _printf(const char *format, ...)
             if (format[i] == '\0')
                 return (-1);
 
-            if (format[i] == 'c')
-                count += _printchar(args);
-            else if (format[i] == 's')
-                count += _printstring(args);
-            else if (format[i] == 'd' || format[i] == 'i')
-                count += _printint(args);
-            else if (format[i] == 'b')
-                count += _printbinary(args);
-            else if (format[i] == '%')
-            {
-                _putchar('%');
-                count++;
-            }
-            else
-            {
-                _putchar('%');
-                _putchar(format[i]);
-                count += 2;
+            switch (format[i]) {
+                case 'u':
+                    count += _print_unsigned(args);
+                    break;
+                case 'o':
+                    count += _print_octal(args);
+                    break;
+                case 'x':
+                    count += _print_hex(args, 0);
+                    break;
+                case 'X':
+                    count += _print_hex(args, 1);
+                    break;
+                case 'S':
+                    count += _print_custom_string(args);
+                    break;
+                case '%':
+                    _putchar('%');
+                    count++;
+                    break;
+                default:
+                    _putchar('%');
+                    _putchar(format[i]);
+                    count += 2;
             }
         }
         else
