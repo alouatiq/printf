@@ -2,54 +2,58 @@
 #include <unistd.h>
 #include <stdarg.h>
 /**
-* _printf - produces output according to a format
-* @format: format string containing the characters and the specifiers
-* Return: number of characters printed (excluding null byte)
+* _printf - Custom implementation of the printf function
+* @format: Format string containing the characters and the specifiers
+* 
+* Return: Number of characters printed
 */
 int _printf(const char *format, ...)
 {
-int count = 0;
-const char *p;
 va_list args;
-char c;
-char *s;
+int printed_chars = 0;
+int i = 0;
+if (format == NULL)
+return (-1);
 va_start(args, format);
-for (p = format; *p != '\0'; p++)
+while (format[i])
 {
-if (*p == '%')
+if (format[i] == '%' && format[i + 1] != '\0')
 {
-p++;
-switch (*p)
+i++;
+if (format[i] == 'c')
 {
-case 'c':
-c = va_arg(args, int);
+char c = va_arg(args, int);
 write(1, &c, 1);
-count++;
-break;
-case 's':
-s = va_arg(args, char *);
-while (*s)
-{
-write(1, s++, 1);
-count++;
+printed_chars++;
 }
-break;
-case '%':
+else if (format[i] == 's')
+{
+char *s = va_arg(args, char *);
+int len = 0;
+while (s[len])
+len++;
+write(1, s, len);
+printed_chars += len;
+}
+else if (format[i] == '%')
+{
 write(1, "%", 1);
-count++;
-break;
-default:
-write(1, p, 1);
-count++;
-break;
+printed_chars++;
+}
+else
+{
+write(1, &format[i - 1], 1);
+write(1, &format[i], 1);
+printed_chars += 2;
 }
 }
 else
 {
-write(1, p, 1);
-count++;
+write(1, &format[i], 1);
+printed_chars++;
 }
+i++;
 }
 va_end(args);
-return count;
+return (printed_chars);
 }
