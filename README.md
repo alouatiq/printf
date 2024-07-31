@@ -10,7 +10,12 @@ This project is a custom implementation of the `printf` function in C.
 gcc -Wall -Wextra -Werror -pedantic -std=gnu89 *.c -o printf
 
 ## Usage
+
 ./printf
+## Function Prototype
+
+```c
+int _printf(const char *format, ...);
 
 ## Authors
 Hassan AL OUATIQ
