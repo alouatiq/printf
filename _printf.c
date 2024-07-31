@@ -1,59 +1,93 @@
 #include "main.h"
-#include <unistd.h>
 #include <stdarg.h>
+#include <unistd.h>
 /**
-* _printf - Custom implementation of the printf function
-* @format: Format string containing the characters and the specifiers
-* 
-* Return: Number of characters printed
+* _printf - produces output according to a format
+* @format: format string containing the characters and the specifiers
+* Description: this function will call the corresponding function
+* that will handle the format
+* Return: length of the formatted output string
 */
 int _printf(const char *format, ...)
 {
+int count = 0;
 va_list args;
-int printed_chars = 0;
 int i = 0;
-if (format == NULL)
-return (-1);
 va_start(args, format);
-while (format[i])
+if (!format)
+return (-1);
+while (format && format[i])
 {
-if (format[i] == '%' && format[i + 1] != '\0')
+if (format[i] == '%')
 {
 i++;
 if (format[i] == 'c')
-{
-char c = va_arg(args, int);
-write(1, &c, 1);
-printed_chars++;
-}
+count += _putchar(va_arg(args, int));
 else if (format[i] == 's')
-{
-char *s = va_arg(args, char *);
-int len = 0;
-while (s[len])
-len++;
-write(1, s, len);
-printed_chars += len;
-}
+count += _puts(va_arg(args, char *));
 else if (format[i] == '%')
-{
-write(1, "%", 1);
-printed_chars++;
+count += _putchar('%');
+else if (format[i] == 'd' || format[i] == 'i')
+count += _print_number(va_arg(args, int));
+else
+return (-1);
 }
 else
-{
-write(1, &format[i - 1], 1);
-write(1, &format[i], 1);
-printed_chars += 2;
-}
-}
-else
-{
-write(1, &format[i], 1);
-printed_chars++;
-}
+count += _putchar(format[i]);
 i++;
 }
 va_end(args);
-return (printed_chars);
+return (count);
+}
+/**
+* _putchar - writes the character c to stdout
+* @c: The character to print
+*
+* Return: On success 1.
+* On error, -1 is returned, and errno is set appropriately.
+*/
+int _putchar(char c)
+{
+return (write(1, &c, 1));
+}
+/**
+* _puts - prints a string to stdout
+* @str: the string to print
+*
+* Return: number of characters printed
+*/
+int _puts(char *str)
+{
+int i = 0;
+if (!str)
+str = "(null)";
+while (str[i])
+_putchar(str[i++]);
+return (i);
+}
+/**
+* _print_number - prints an integer to stdout
+* @n: the integer to print
+*
+* Return: number of characters printed
+*/
+int _print_number(int n)
+{
+unsigned int num;
+int count = 0;
+if (n < 0)
+{
+_putchar('-');
+count++;
+num = -n;
+}
+else
+{
+num = n;
+}
+if (num / 10)
+count += _print_number(num / 10);
+_putchar((num % 10) + '0');
+count++;
+return (count);
 }
