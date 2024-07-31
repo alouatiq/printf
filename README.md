@@ -8,6 +8,7 @@ This project is a custom implementation of the `printf` function in C.
 ## Compilation
 ```sh
 gcc -Wall -Wextra -Werror -pedantic -std=gnu89 *.c -o printf
+```
 
 ## Usage
 
@@ -16,7 +17,9 @@ gcc -Wall -Wextra -Werror -pedantic -std=gnu89 *.c -o printf
 
 ```c
 int _printf(const char *format, ...);
+```
 
 ## Authors
-Hassan AL OUATIQ
+AL OUATIQ H.
+
 Adewole Gege
