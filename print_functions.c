@@ -68,3 +68,34 @@ int _printint(va_list args)
 
     return (count);
 }
+
+/**
+ * _printbinary - Prints an unsigned integer in binary
+ * @args: The argument list containing the unsigned integer to print
+ *
+ * Return: The number of characters printed
+ */
+int _printbinary(va_list args)
+{
+    unsigned int n = va_arg(args, unsigned int);
+    int count = 0;
+    int i;
+    unsigned int mask = 0x80000000;  // Mask to check each bit, assuming 32-bit integer
+
+    if (n == 0)
+    {
+        _putchar('0');
+        return 1;
+    }
+
+    while (!(mask & n))  // Skip leading zeros
+        mask >>= 1;
+
+    for (; mask; mask >>= 1)
+    {
+        _putchar((n & mask) ? '1' : '0');
+        count++;
+    }
+
+    return count;
+}
