@@ -20,5 +20,6 @@ int _printf(const char *format, ...);
 ```
 
 ## Authors
-Hassan AL OUATIQ
+AL OUATIQ H.
+
 Adewole Gege
