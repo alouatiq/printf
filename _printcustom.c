@@ -86,4 +86,16 @@ int _printnonprintable(va_list args)
                 count++;
             }
 
-      
+            count += _putchar((str[i] / 16) + '0'); /* First hex digit */
+            count += _putchar((str[i] % 16) < 10 ? (str[i] % 16) + '0'
+                                                 : (str[i] % 16) - 10 + 'A'); /* Second hex digit */
+        }
+        else
+        {
+            _putchar(str[i]);
+            count++;
+        }
+    }
+
+    return (count);
+}
