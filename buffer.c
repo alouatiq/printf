@@ -17,20 +17,29 @@ int _write_buffer(char *buffer, int len)
 
 /**
  * _add_to_buffer - Adds a character to the buffer and flushes if full
- * @buffer: The buffer to hold characters
- * @index: Pointer to the current index in the buffer
+ * @buffer: The buffer to hold characters (can be NULL to use default buffer)
+ * @index: Pointer to the current index in the buffer (can be NULL to use default buffer index)
  * @c: The character to add to the buffer
  *
  * Return: The total number of characters written (flushed)
  */
 int _add_to_buffer(char *buffer, int *index, char c)
 {
+    static char default_buffer[BUFFER_SIZE]; /* Default internal buffer */
+    static int default_index = 0;           /* Default internal index */
     int written = 0;
+
+    /* Use default buffer if none provided */
+    if (!buffer)
+    {
+        buffer = default_buffer;
+        index = &default_index;
+    }
 
     buffer[*index] = c;
     (*index)++;
 
-    /* If buffer is full, flush it */
+    /* Flush the buffer if full */
     if (*index == BUFFER_SIZE)
     {
         written = _write_buffer(buffer, *index);
