@@ -26,11 +26,11 @@ int _printf(const char *format, ...)
                 return (-1);
 
             if (format[i] == 'c')
-                count += _printchar(args);
+                count += _printchar(args);  /* Calls the handler for %c */
             else if (format[i] == 's')
-                count += _printstring(args);
+                count += _printstring(args); /* Calls the handler for %s */
             else if (format[i] == 'd' || format[i] == 'i')
-                count += _printint(args);
+                count += _printint(args);  /* Calls the handler for %d and %i */
             else if (format[i] == '%')
             {
                 _putchar('%');
