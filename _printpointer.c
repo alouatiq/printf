@@ -15,7 +15,7 @@ int _printpointer(va_list args)
 
     if (!ptr)
     {
-        return (_printstring("(nil)")); /* Print "(nil)" for NULL pointers */
+        return (write(1, "(nil)", 5)); /* Directly output "(nil)" for NULL pointers */
     }
 
     address = (unsigned long int)ptr;
