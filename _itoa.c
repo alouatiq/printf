@@ -1,19 +1,11 @@
 #include "main.h"
 
-/**
- * _itoa - Converts an integer to a string
- * @num: The integer to convert
- * @str: The buffer to store the converted string
- * @base: The numerical base (e.g., 10 for decimal, 16 for hexadecimal)
- *
- * Return: A pointer to the resulting string
- */
 char *_itoa(int num, char *str, int base)
 {
-    int i = 0, is_negative = 0;
+    int i = 0, is_negative = 0, start, end; /* Declare variables at the top */
     unsigned int n;
 
-    /* Handle 0 explicitly, since it's a special case */
+    /* Handle 0 explicitly */
     if (num == 0)
     {
         str[i++] = '0';
@@ -44,10 +36,10 @@ char *_itoa(int num, char *str, int base)
     if (is_negative)
         str[i++] = '-';
 
-    str[i] = '\0'; /* Null-terminate the string */
+    str[i] = '\0';
 
     /* Reverse the string */
-    for (int start = 0, end = i - 1; start < end; start++, end--)
+    for (start = 0, end = i - 1; start < end; start++, end--)
     {
         char temp = str[start];
         str[start] = str[end];
