@@ -3,6 +3,36 @@
 ## Overview
 This project involves implementing our own version of the C library function `printf`. The `printf` function is used to send formatted output to the standard output stream. Our implementation will handle various conversion specifiers and modifiers to format strings, integers, and other data types.
 
+## Stracture:
+```
+printf/
+├── README.md           # Project documentation
+├── main.h              # Header file with prototypes and macros (Core for all tasks)
+├── _printf.c           # Main printf function implementation (Core for all tasks) - Mandatory
+├── _putchar.c          # Writes a character to stdout (Support for all tasks) - Mandatory
+├── _printchar.c        # Handler for character specifier (%c) (Task 0) - Mandatory
+├── _printstring.c      # Handler for string specifier (%s) (Task 0) - Mandatory
+├── _printint.c         # Handler for integer specifiers (%d, %i) (Task 1) - Mandatory
+├── _printbinary.c      # Handler for binary specifier (%b) (Task 2) - Advanced
+├── _printunsigned.c    # Handler for unsigned integer specifier (%u) (Task 3) - Advanced
+├── _printhex.c         # Handler for hexadecimal specifiers (%x, %X) (Task 3) - Advanced
+├── _printoctal.c       # Handler for octal specifier (%o) (Task 3) - Advanced
+├── _printpointer.c     # Handler for pointer specifier (%p) (Task 6) - Advanced
+├── _printcustom.c      # Handler for custom specifiers (%r, %R, %S) (Tasks 5, 13, 14) - Advanced
+├── buffer.c            # Buffer management for optimizing write calls (Task 4) - Advanced
+├── _strlen.c           # Utility function to calculate string length (Support for Tasks 0, 5, 13, 14) - Mandatory
+├── _strcpy.c           # Utility function to copy strings (Support for custom specifiers) - Advanced
+├── _itoa.c             # Utility function to convert integers to strings (Support for Tasks 1, 3) - Advanced
+├── _rot13.c            # Utility function for ROT13 encoding (%R) (Task 14) - Advanced
+├── _reverse.c          # Utility function to reverse a string (%r) (Task 13) - Advanced
+├── test_main.c         # Main file for testing (Covers all mandatory and advanced tasks) - Mandatory
+├── test_cases.c        # Additional test cases (Comprehensive task testing) - Advanced
+├── betty-style.pl      # Betty style checker script - Support
+├── betty-doc.pl        # Betty documentation checker script - Support
+├── man_3_printf        # Manual file for the custom printf function - Support
+├── .gitignore          # Files and directories to ignore in Git (Support for repository management)
+```
+
 ## Team Members
 - Hassan AL OUATIQ
 - Adewole Gege
