@@ -25,27 +25,59 @@ int _printf(const char *format, ...)
             if (format[i] == '\0')
                 return (-1);
 
-            if (format[i] == 'c')
-                count += _printchar(args);  /* Calls the handler for %c */
-            else if (format[i] == 's')
-                count += _printstring(args); /* Calls the handler for %s */
-            else if (format[i] == 'd' || format[i] == 'i')
-                count += _printint(args);  /* Calls the handler for %d and %i */
-            else if (format[i] == '%')
+            switch (format[i])
             {
-                _putchar('%');
+            case 'c':
+                count += _printchar(args); /* Handle %c */
+                break;
+            case 's':
+                count += _printstring(args); /* Handle %s */
+                break;
+            case 'd':
+            case 'i':
+                count += _printint(args); /* Handle %d and %i */
+                break;
+            case 'b':
+                count += _printbinary(args); /* Handle %b */
+                break;
+            case 'u':
+                count += _printunsigned(args); /* Handle %u */
+                break;
+            case 'o':
+                count += _printoctal(args); /* Handle %o */
+                break;
+            case 'x':
+                count += _printhex(args, 0); /* Handle %x (lowercase) */
+                break;
+            case 'X':
+                count += _printhex(args, 1); /* Handle %X (uppercase) */
+                break;
+            case 'p':
+                count += _printpointer(args); /* Handle %p */
+                break;
+            case 'r':
+                count += _printreverse(args); /* Handle %r */
+                break;
+            case 'R':
+                count += _printrot13(args); /* Handle %R */
+                break;
+            case 'S':
+                count += _printnonprintable(args); /* Handle %S */
+                break;
+            case '%':
+                _putchar('%'); /* Handle %% */
                 count++;
-            }
-            else
-            {
+                break;
+            default:
                 _putchar('%');
                 _putchar(format[i]);
-                count += 2;
+                count += 2; /* Print unknown specifier as-is */
+                break;
             }
         }
         else
         {
-            _putchar(format[i]);
+            _putchar(format[i]); /* Print regular characters */
             count++;
         }
         i++;
