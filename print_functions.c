@@ -9,8 +9,8 @@
 int _printchar(va_list args)
 {
     char c = va_arg(args, int);
-    _putchar(c);
-    return (1);
+
+    return (_add_to_buffer(NULL, NULL, c)); /* Use the buffer system */
 }
 
 /**
@@ -22,15 +22,18 @@ int _printchar(va_list args)
 int _printstring(va_list args)
 {
     char *str = va_arg(args, char *);
-    int i;
+    int count = 0;
 
     if (!str)
         str = "(null)";
 
-    for (i = 0; str[i]; i++)
-        _putchar(str[i]);
+    while (*str)
+    {
+        count += _add_to_buffer(NULL, NULL, *str);
+        str++;
+    }
 
-    return (i);
+    return (count);
 }
 
 /**
@@ -42,29 +45,13 @@ int _printstring(va_list args)
 int _printint(va_list args)
 {
     int n = va_arg(args, int);
-    unsigned int num, digit, exp = 1;
-    int count = 0;
+    char str[12]; /* Enough to hold INT_MIN (-2147483648) */
+    int i, count = 0;
 
-    if (n < 0)
-    {
-        _putchar('-');
-        count++;
-        num = -n;
-    }
-    else
-        num = n;
+    _itoa(n, str, 10); /* Convert the integer to a string */
 
-    while (num / exp > 9)
-        exp *= 10;
-
-    while (exp > 0)
-    {
-        digit = num / exp;
-        _putchar(digit + '0');
-        count++;
-        num %= exp;
-        exp /= 10;
-    }
+    for (i = 0; str[i]; i++)
+        count += _add_to_buffer(NULL, NULL, str[i]);
 
     return (count);
 }
