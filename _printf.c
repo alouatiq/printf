@@ -1,5 +1,8 @@
 #include "main.h"
 
+/* Define buffer size */
+#define BUFFER_SIZE 1024
+
 /**
  * _printf - Produces output according to a format
  * @format: Character string composed of zero or more directives
@@ -10,7 +13,8 @@
 int _printf(const char *format, ...)
 {
     va_list args;
-    int i = 0, count = 0;
+    int i = 0, count = 0, buffer_index = 0;
+    char buffer[BUFFER_SIZE];
 
     if (!format)
         return (-1);
@@ -23,65 +27,69 @@ int _printf(const char *format, ...)
         {
             i++;
             if (format[i] == '\0')
-                return (-1);
-
-            switch (format[i])
             {
-            case 'c':
-                count += _printchar(args); /* Handle %c */
-                break;
-            case 's':
-                count += _printstring(args); /* Handle %s */
-                break;
-            case 'd':
-            case 'i':
-                count += _printint(args); /* Handle %d and %i */
-                break;
-            case 'b':
-                count += _printbinary(args); /* Handle %b */
-                break;
-            case 'u':
-                count += _printunsigned(args); /* Handle %u */
-                break;
-            case 'o':
-                count += _printoctal(args); /* Handle %o */
-                break;
-            case 'x':
-                count += _printhex(args, 0); /* Handle %x (lowercase) */
-                break;
-            case 'X':
-                count += _printhex(args, 1); /* Handle %X (uppercase) */
-                break;
-            case 'p':
-                count += _printpointer(args); /* Handle %p */
-                break;
-            case 'r':
-                count += _printreverse(args); /* Handle %r */
-                break;
-            case 'R':
-                count += _printrot13(args); /* Handle %R */
-                break;
-            case 'S':
-                count += _printnonprintable(args); /* Handle %S */
-                break;
-            case '%':
-                _putchar('%'); /* Handle %% */
-                count++;
-                break;
-            default:
-                _putchar('%');
-                _putchar(format[i]);
-                count += 2; /* Print unknown specifier as-is */
-                break;
+                va_end(args);
+                return (-1);
+            }
+
+            /* Old cases preserved */
+            if (format[i] == 'c')
+                count += _add_to_buffer(buffer, &buffer_index, va_arg(args, int)); /* %c */
+            else if (format[i] == 's')
+                count += _printstring_to_buffer(buffer, &buffer_index, va_arg(args, char *)); /* %s */
+            else if (format[i] == 'd' || format[i] == 'i')
+                count += _printint_to_buffer(buffer, &buffer_index, va_arg(args, int)); /* %d, %i */
+            else if (format[i] == '%')
+                count += _add_to_buffer(buffer, &buffer_index, '%'); /* %% */
+            else
+            {
+                /* New cases for advanced specifiers */
+                switch (format[i])
+                {
+                case 'b':
+                    count += _printbinary_to_buffer(buffer, &buffer_index, va_arg(args, unsigned int));
+                    break;
+                case 'u':
+                    count += _printunsigned_to_buffer(buffer, &buffer_index, va_arg(args, unsigned int));
+                    break;
+                case 'o':
+                    count += _printoctal_to_buffer(buffer, &buffer_index, va_arg(args, unsigned int));
+                    break;
+                case 'x':
+                    count += _printhex_to_buffer(buffer, &buffer_index, va_arg(args, unsigned int), 0);
+                    break;
+                case 'X':
+                    count += _printhex_to_buffer(buffer, &buffer_index, va_arg(args, unsigned int), 1);
+                    break;
+                case 'p':
+                    count += _printpointer_to_buffer(buffer, &buffer_index, va_arg(args, void *));
+                    break;
+                case 'r':
+                    count += _printreverse_to_buffer(buffer, &buffer_index, va_arg(args, char *));
+                    break;
+                case 'R':
+                    count += _printrot13_to_buffer(buffer, &buffer_index, va_arg(args, char *));
+                    break;
+                case 'S':
+                    count += _printnonprintable_to_buffer(buffer, &buffer_index, va_arg(args, char *));
+                    break;
+                default:
+                    count += _add_to_buffer(buffer, &buffer_index, '%');
+                    count += _add_to_buffer(buffer, &buffer_index, format[i]);
+                    break;
+                }
             }
         }
         else
         {
-            _putchar(format[i]); /* Print regular characters */
-            count++;
+            count += _add_to_buffer(buffer, &buffer_index, format[i]);
         }
         i++;
     }
+
+    /* Flush remaining characters in the buffer */
+    if (buffer_index > 0)
+        count += _write_buffer(buffer, buffer_index);
 
     va_end(args);
     return (count);
